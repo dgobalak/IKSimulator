@@ -12,6 +12,7 @@ def to_pygame(coord):
 def to_cartesian(coord):
     return (coord[0] - WIDTH/2, (HEIGHT - coord[1]))
 
+
 links = []  # List of links
 links.append(Link(0, LINK_LENGTH))
 
@@ -21,7 +22,7 @@ for i in range(1, NUM_LINKS):
 
 def main():
     screen = pygame.display.set_mode((WIDTH, WIDTH))
-    
+
     while True:
         screen.fill(SCREEN_COLOR)
 

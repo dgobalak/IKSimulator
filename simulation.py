@@ -6,19 +6,21 @@ import pygame
 
 
 def to_pygame(coord):
-    return (coord[0] + WIDTH/2, (HEIGHT/2 - coord[1]))
+    return (coord[0] + WIDTH/2, (HEIGHT - coord[1]))
 
 
 def to_cartesian(coord):
-    return (coord[0] - WIDTH/2, (HEIGHT/2 - coord[1]))
+    return (coord[0] - WIDTH/2, (HEIGHT - coord[1]))
 
+links = []  # List of links
+links.append(Link(0, LINK_LENGTH))
 
-links = [Link(0, 50)]  # List of links
+for i in range(1, NUM_LINKS):
+    links.append(Link(i, LINK_LENGTH, links[i-1]))
 
 
 def main():
     screen = pygame.display.set_mode((WIDTH, WIDTH))
-    pygame.mouse.set_pos(to_pygame(links[-1].end.get_coordinate()))
     
     while True:
         screen.fill(SCREEN_COLOR)
@@ -27,11 +29,12 @@ def main():
             if events.type == QUIT:
                 sys.exit(0)
 
-        for link in links:
-            pos = to_cartesian(pygame.mouse.get_pos())
-            links[0].move(*pos)
+        pos = to_cartesian(pygame.mouse.get_pos())
+        for link in links[::-1]:
+            link.move(*pos)
+            pos = link.start.get_coordinate()
             pygame.draw.line(screen, LINK_COLOR, to_pygame(
-                link.start.get_coordinate()), to_pygame(link.end.get_coordinate()), LINE_WIDTH)
+                link.start.get_coordinate()), to_pygame(link.end.get_coordinate()), LINK_WIDTH)
 
         pygame.display.update()
 

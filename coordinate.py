@@ -21,5 +21,8 @@ class Coordinate:
         self.set_y(y)
         return self
     
+    def get_coordinate(self):
+        return (self.x, self.y)
+    
     def __str__(self):
         return f'(x: {self.x}, y: {self.y})'

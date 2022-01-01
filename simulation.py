@@ -21,7 +21,7 @@ for i in range(1, NUM_LINKS):
 
 
 def main():
-    screen = pygame.display.set_mode((WIDTH, WIDTH))
+    screen = pygame.display.set_mode((WIDTH, HEIGHT))
 
     while True:
         screen.fill(SCREEN_COLOR)

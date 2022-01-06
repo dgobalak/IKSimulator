@@ -44,16 +44,22 @@ def inverse_kin(target, lengths, angles):
 
 
 def main():
-    angles = [90, 0, 0, 0]
-    lengths = [100, 100, 100, 100]
+    # Set target
+    target = np.array((100, 150))
 
+    # Start in vertical position
+    angles = [0] * NUM_LINKS
+    angles[0] = 90
+
+    lengths = [LINK_LENGTH] * NUM_LINKS
+
+    # Setup up pygame screen and clock
     pygame.init()
     pygame.display.set_caption(TITLE)
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
     clock = pygame.time.Clock()
 
-    target = np.array((100, 200))
-
+    # Perform gradient descent until end effector is within threshold
     while get_distance(target, lengths, angles) > MIN_THRESHOLD:
         clock.tick(FPS)
         screen.fill(SCREEN_COLOR)
@@ -63,12 +69,12 @@ def main():
         pygame.draw.rect(screen, TARGET_COLOR, [
                          pg_target[0], pg_target[1], LINK_WIDTH, LINK_WIDTH])
 
+        # Check for user-inputted exit
         for events in pygame.event.get():
             if events.type == QUIT:
                 sys.exit(0)
 
-        inverse_kin(target, lengths, angles)
-
+        # Draw the links
         start = np.array((0, 0), dtype=float)
         end = np.array((0, 0), dtype=float)
         rot = 0
@@ -77,8 +83,6 @@ def main():
             end[0] += np.cos(rot) * lengths[i]
             end[1] += np.sin(rot) * lengths[i]
 
-            print(start.astype(int), end.astype(int))
-
             pygame.draw.line(screen, LINK_COLOR, to_pygame(
                 start.astype(int)), to_pygame(end.astype(int)), LINK_WIDTH)
 
@@ -86,6 +90,10 @@ def main():
 
         pygame.display.update()
 
+        # Perform 1 pass of gradient descent
+        inverse_kin(target, lengths, angles)
+
+    # Pause once gradient descent is complete
     pygame.time.wait(2000)
 
 
